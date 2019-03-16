@@ -18,10 +18,10 @@ export function updateBook(book){
     }
 }
 
-export function deleteBook (id){
+export function deleteBook (_id){
     return{
         type: "DELETE_BOOK",
-        payload: id
+        payload: _id
     }
 }
 
@@ -38,6 +38,16 @@ export function deleteCartItem (cart){
     return{
         type: "DELETE_CART_ITEM",
         payload: cart
+    }
+}
+//update to cart
+export function updateCart (_id,unit){
+
+    return{
+        type: "UPDATE_CART",
+        _id: _id,
+        unit: unit
+
     }
 }
 

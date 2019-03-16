@@ -1,13 +1,19 @@
 "use strict"
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware } from 'redux';
+import {Router, Route, BrowserRouter } from 'react-router-dom'
 import { postBook, deleteBook, updateBook, addToCart } from './actions'
 import { createLogger} from 'redux-logger'
 import reducers from './reducers'
 import {Provider} from 'react-redux'
-//step 3: define reducers
 
+import BookForm from './components/pages/BookForm'
+import Cart from './components/pages/Cart'
+import Main from './Main'
+import Menu from './components/Menu'
+import Footer from './components/Footer'
 const middleware = applyMiddleware(createLogger());
 
 
@@ -17,10 +23,25 @@ const store = createStore(reducers, middleware);
 
 //rendering react dom
 import BookList from './components/pages/BookList'
-ReactDOM.render(
+
+const Routes = (
     <Provider store={store}>
-    <BookList />
-    </Provider>,
+        <BrowserRouter>
+        <div>
+            <Main />
+            <Route path="/" exact component={BookList} />
+            <Route path="/admin" component={BookForm} />
+            <Route path="/cart" component={Cart} />
+            <Footer />
+        </div>
+
+        </BrowserRouter>
+    </Provider>
+)
+
+
+ReactDOM.render(
+    Routes,
     document.getElementById('app')
 )
 
