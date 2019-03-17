@@ -3,10 +3,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware } from 'redux';
-import {Router, Route, BrowserRouter } from 'react-router-dom'
+import {Switch, Route, BrowserRouter } from 'react-router-dom'
 import { postBook, deleteBook, updateBook, addToCart } from './actions'
 import { createLogger} from 'redux-logger'
 import reducers from './reducers'
+import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 
 import BookForm from './components/pages/BookForm'
@@ -14,7 +15,7 @@ import Cart from './components/pages/Cart'
 import Main from './Main'
 import Menu from './components/Menu'
 import Footer from './components/Footer'
-const middleware = applyMiddleware(createLogger());
+const middleware = applyMiddleware(thunk,createLogger());
 
 
 //step 1: create the store
@@ -29,9 +30,11 @@ const Routes = (
         <BrowserRouter>
         <div>
             <Main />
+            <Switch>
             <Route path="/" exact component={BookList} />
             <Route path="/admin" component={BookForm} />
             <Route path="/cart" component={Cart} />
+            </Switch>
             <Footer />
         </div>
 

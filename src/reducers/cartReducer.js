@@ -1,5 +1,11 @@
 export function cartReducer(state={cart:[]}, action){
     switch(action.type){
+        case "GET_CART":
+            return {...state,
+            cart: action.payload,
+            totalAmount: totals(action.payload).amount,
+            totalquantity: totals(action.payload).quantity
+        }
         case "ADD_TO_CART" : 
             return {...state,
                   cart: action.payload,
@@ -8,18 +14,12 @@ export function cartReducer(state={cart:[]}, action){
                 }
         
         case "UPDATE_CART" :
-            const cartId = [...state.cart]
-            const cartIndex = cartId.findIndex( cart => cart._id === action._id)
-            const updateToCart = {...cartId[cartIndex],
-                    quantity: cartId[cartIndex].quantity + action.unit
-            }
-            let cartUpdate = [...cartId.slice(0,cartIndex), updateToCart,
-                ...cartId.slice(cartIndex+1)]
+           
 
             return {...state, 
-                cart: cartUpdate,
-                totalAmount: totals(cartUpdate).amount,
-                totalquantity: totals(cartUpdate).quantity
+                cart: action.payload,
+                totalAmount: totals(action.payload).amount,
+                totalquantity: totals(action.payload).quantity
             }
             
         case "DELETE_CART_ITEM" : 

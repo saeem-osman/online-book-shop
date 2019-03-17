@@ -1,30 +1,8 @@
 
-export function booksReducer(state = 
-    {book: 
-        [
-            {
-                _id: 0,
-                title : 'This is my life',
-                description: 'This is a very important book',
-                price : "33.33"
-            },
-            {
-                _id: 1,
-                title : 'I love you',
-                description: 'This is not an important book',
-                price : "500.33"
-            },
-            {
-                _id: 2,
-                title: "LOLO",
-                description: "This is lolo",
-                price: "399"
-            }
-         ]
-    }, action){
+export function booksReducer(state = {book:[]}, action){
     switch(action.type){
         case "GET_BOOK":
-        return {...state, book: [...state.book]}
+        return {...state, book: [...action.payload]}
 
         case "POST_BOOK":
         return {book: [...state.book, ...action.payload]}

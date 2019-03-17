@@ -1,11 +1,29 @@
 import React, { Component } from 'react'
-import { Container, Form, TabPane, FormControl, FormGroup, FormLabel, Button } from 'react-bootstrap'
+import { InputGroup, DropdownButton, Dropdown, Image, Col, Row ,Container, Form, Card, FormControl, FormGroup, FormLabel, Button } from 'react-bootstrap'
 import {bindActionCreators} from 'redux'
 import { connect } from 'react-redux'
 import { postBook, deleteBook } from '../../actions'
 import {findDOMNode} from 'react-dom'
+import axios from 'axios'
 
 export class BookForm extends Component {
+  constructor(){
+    super();
+    this.state = {
+      images: [],
+      img: ''
+    }
+  }
+    // componentDidMount(){
+    //   axios.get('/api/images')
+    //     .then(function(response){
+    //       this.setState({images: response.data})
+    //     }.bind(this))
+    //     .catch(function(err){
+    //       this.setState({images: 'error loading image data', img: ''})
+    //     })
+    // }
+
     handleSubmit(){
         const book = [{
             title: findDOMNode(this.refs.title).vlaue,
@@ -22,56 +40,74 @@ export class BookForm extends Component {
 
   render() {
 
-    let bookList = this.props.books.map(function(bookArr){
+    let bookList = this.props.books.map((bookArr)=>{
       return(
         <option key={bookArr._id}>{bookArr._id}</option>
       )
     })
 
+    const imgList = this.state.images.map(function(image,i){
+      return(
+        <Dropdown.Item key={i} eventKey={image.name}>{image.name}</Dropdown.Item>
+      )
+    },this)
+
     return (
       <Container>
-          <TabPane>
-              <FormGroup controlId="title">
-                <FormLabel>Title</FormLabel>
-                <FormControl
-                    type="text"
-                    placeholder="Enter Title"
-                    ref="title" />
-              </FormGroup>
+        <Row>
+          <Col>
+            <Card>
+              <InputGroup>
+                <FormControl type="text" ref="image" value=""/>
+                <DropdownButton id="dropdown-basic-button" title="Select an image" variant="primary">
+                  
+                </DropdownButton>;
+              </InputGroup>
+              <Image src="" rounded/>
+            </Card>
+          </Col>
+          <Col>
+            <Card>
+                <FormGroup controlId="title">
+                  <FormLabel>Title</FormLabel>
+                  <FormControl
+                      type="text"
+                      placeholder="Enter Title"
+                      ref="title" />
+                </FormGroup>
 
-              <FormGroup controlId="description">
-                <FormLabel>Description</FormLabel>
-                <FormControl
-                    type="text"
-                    placeholder="Enter Description"
-                    ref="description" />
-              </FormGroup>
+                <FormGroup controlId="description">
+                  <FormLabel>Description</FormLabel>
+                  <FormControl
+                      type="text"
+                      placeholder="Enter Description"
+                      ref="description" />
+                </FormGroup>
 
-              <FormGroup controlId="price">
-                <FormLabel>Price</FormLabel>
-                <FormControl
-                    type="text"
-                    placeholder="Enter price"
-                    ref="price" />
-              </FormGroup>
-              <Button variant="primary" onClick={this.handleSubmit.bind(this)}>Save Book</Button>
-          </TabPane>
-          <TabPane>
-          <Form>
-            <Form.Group controlId="exampleForm.ControlInput1">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="name@example.com" />
-            </Form.Group>
-            <Form.Group controlId="exampleForm.ControlSelect1">
-              <Form.Label>Select a book to delete</Form.Label>
-              <Form.Control ref="delete" as="select">
-                <option value="select">Select</option>
-                {bookList}
-              </Form.Control>
-            </Form.Group>
-            <Button onClick={this.onDelete.bind(this)} variant="danger">Delete Book</Button>
-            </Form>
-        </TabPane>
+                <FormGroup controlId="price">
+                  <FormLabel>Price</FormLabel>
+                  <FormControl
+                      type="text"
+                      placeholder="Enter price"
+                      ref="price" />
+                </FormGroup>
+                <Button variant="primary" onClick={this.handleSubmit.bind(this)}>Save Book</Button>
+            </Card>
+            <Card>
+            <Form>
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select a book to delete</Form.Label>
+                <Form.Control ref="delete" as="select">
+                  <option value="select">Select</option>
+                  {bookList}
+                </Form.Control>
+              </Form.Group>
+              <Button onClick={this.onDelete.bind(this)} variant="danger">Delete Book</Button>
+              </Form>
+          </Card>
+          </Col>
+        </Row>
+          
       </Container>
     )
   }

@@ -22,7 +22,7 @@ class BookItem extends React.Component{
             if(cartIndex === -1){
                 this.props.addToCart(book)
             }else{
-                this.props.updateCart(_id,1)
+                this.props.updateCart(_id,1,this.props.cart)
 
             }
         }else{

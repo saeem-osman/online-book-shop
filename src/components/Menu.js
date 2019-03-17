@@ -2,8 +2,14 @@
 import React, { Component } from 'react'
 import {Nav,NavItem, Navbar, Badge} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
+import {getCart} from '../actions'
+import { bindActionCreators } from 'redux';
 
 export class Menu extends Component {
+  componentDidMount(){
+    this.props.getCart();
+  }
   render() {
     return (
     <Navbar inverse fixedTop expand="lg" bg="dark" variant="dark">
@@ -11,14 +17,14 @@ export class Menu extends Component {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-            <Link to="/about">About</Link>
-            <Link to="/contact">Contacts</Link>
+              <NavItem eventKey={1} href="/about">About</NavItem>
+              <NavItem eventKey={2} href="/contacts">Contact Us</NavItem>
             </Nav>
             <Nav pullRight>
-            <Link to="/admin">Admin</Link>
-            <Nav.Link eventKey={2} href="#">
+            <NavItem eventKey={1} href="/admin">Admin</NavItem>
+            <NavItem eventKey={2} href="/cart">Your Cart
                 Your Cart {(this.props.totalCartItems>0)?(<Badge className="badge">{this.props.totalCartItems}</Badge>): ''}
-            </Nav.Link>
+            </NavItem>
             </Nav>
         </Navbar.Collapse>
     </Navbar>
@@ -27,4 +33,18 @@ export class Menu extends Component {
   }
 }
 
-export default Menu
+function mapStateToProps(state){
+  return {
+    totalQuantity: state.cart.totalquantity
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return (
+    bindActionCreators({
+      getCart
+    },dispatch)
+  )
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Menu)
