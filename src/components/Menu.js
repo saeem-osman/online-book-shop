@@ -13,16 +13,16 @@ export class Menu extends Component {
   render() {
     return (
     <Navbar inverse fixedTop expand="lg" bg="dark" variant="dark">
-        <Navbar.Brand href="/">Home Page</Navbar.Brand>
+        <Navbar.Brand><Link to="/">Home Page</Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-              <NavItem eventKey={1} href="/about">About</NavItem>
-              <NavItem eventKey={2} href="/contacts">Contact Us</NavItem>
+              <NavItem eventKey={1}><Link to="/about">Home Page</Link></NavItem>
+              <NavItem eventKey={2}><Link to="/contacts">Contact Us</Link></NavItem>
             </Nav>
             <Nav pullRight>
-            <NavItem eventKey={1} href="/admin">Admin</NavItem>
-            <NavItem eventKey={2} href="/cart">Your Cart
+            <NavItem eventKey={1}><Link to="/admin">Admin</Link></NavItem>
+            <NavItem eventKey={2}><Link to="/cart">Cart</Link>
                 Your Cart {(this.props.totalCartItems>0)?(<Badge className="badge">{this.props.totalCartItems}</Badge>): ''}
             </NavItem>
             </Nav>
@@ -42,7 +42,7 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
   return (
     bindActionCreators({
-      getCart
+      getCart: getCart
     },dispatch)
   )
 }

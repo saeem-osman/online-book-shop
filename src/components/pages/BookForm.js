@@ -2,35 +2,52 @@ import React, { Component } from 'react'
 import { InputGroup, DropdownButton, Dropdown, Image, Col, Row ,Container, Form, Card, FormControl, FormGroup, FormLabel, Button } from 'react-bootstrap'
 import {bindActionCreators} from 'redux'
 import { connect } from 'react-redux'
-import { postBook, deleteBook } from '../../actions'
+import { postBook, deleteBook,getBook } from '../../actions'
 import {findDOMNode} from 'react-dom'
 import axios from 'axios'
 
 export class BookForm extends Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
-      images: [],
-      img: ''
+      images:[{}],
+      img:''
     }
   }
-    // componentDidMount(){
+    componentDidMount = async ()=> {
+      this.props.getBook();
+      axios.get('/api/images')
+        .then(function(response){
+          this.setState({images: response.data})
+        }.bind(this))
+        .catch(function(err){
+          this.setState({images: 'error loading image data', img: ''})
+        }.bind(this))
+    }
+      
+
     //   axios.get('/api/images')
     //     .then(function(response){
     //       this.setState({images: response.data})
     //     }.bind(this))
     //     .catch(function(err){
     //       this.setState({images: 'error loading image data', img: ''})
-    //     })
+    //     }.bind(this))
     // }
 
     handleSubmit(){
-        const book = [{
-            title: findDOMNode(this.refs.title).vlaue,
-            description: findDOMNode(this.refs.description).value,
-            price: findDOMNode(this.refs.price).value
-        }]
-        this.props.postBook(book)
+      const book=[{
+        title: findDOMNode(this.refs.title).value,
+        description: findDOMNode(this.refs.description).value,
+        price: findDOMNode(this.refs.price).value,
+      }]
+      this.props.postBooks(book);
+    }
+
+    handleSelect(img){
+      this.setState({
+        img: '/images/'+ img
+      })
     }
 
     onDelete(){
@@ -40,17 +57,19 @@ export class BookForm extends Component {
 
   render() {
 
-    let bookList = this.props.books.map((bookArr)=>{
-      return(
-        <option key={bookArr._id}>{bookArr._id}</option>
+    const booksList = this.props.books.map(function(booksArr){
+      return (
+        <option key={booksArr._id}> {booksArr._id}</option>
       )
     })
 
-    const imgList = this.state.images.map(function(image,i){
+    const imgList = this.state.images.map(function(imgArr, i){
       return(
-        <Dropdown.Item key={i} eventKey={image.name}>{image.name}</Dropdown.Item>
+        <Dropdown.Item key={i} eventKey={imgArr.name}
+          >{imgArr.name}</Dropdown.Item>
       )
-    },this)
+    })
+    
 
     return (
       <Container>
@@ -60,7 +79,7 @@ export class BookForm extends Component {
               <InputGroup>
                 <FormControl type="text" ref="image" value=""/>
                 <DropdownButton id="dropdown-basic-button" title="Select an image" variant="primary">
-                  
+                  {imgList}
                 </DropdownButton>;
               </InputGroup>
               <Image src="" rounded/>
@@ -99,7 +118,7 @@ export class BookForm extends Component {
                 <Form.Label>Select a book to delete</Form.Label>
                 <Form.Control ref="delete" as="select">
                   <option value="select">Select</option>
-                  {bookList}
+                  {booksList}
                 </Form.Control>
               </Form.Group>
               <Button onClick={this.onDelete.bind(this)} variant="danger">Delete Book</Button>
@@ -121,7 +140,7 @@ function mapStateToProps(state){
 
 function mapDispatchToprops(dispatch){
     return(
-        bindActionCreators({postBook, deleteBook},dispatch)
+        bindActionCreators({postBook, deleteBook, getBook},dispatch)
     )
 }
 export default connect(mapStateToProps,mapDispatchToprops)(BookForm)

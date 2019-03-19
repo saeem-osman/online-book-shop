@@ -1,163 +1,141 @@
-var createError = require('http-errors');
+"use strict"
 var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-//for cart session
+var bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
-
-
+const cors = require('cors')
 var app = express();
-
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(cors({credentials: true, origin: true}))
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false,  origin: true}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/', (req,res)=>{
-//   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-// })
 
-//APIs
-const mongoose = require('mongoose');
+// APIs
+var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/bookshop', {useNewUrlParser: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, '# MongoDB - connection error: '));
 
-//--->>>>SETUP SESSIONS<<<------//
-
+// --->>> SET UP SESSIONS <<<----
 app.use(session({
-    secret: "heello",
-    resave: false,
-    saveUninitialized: false,
-    cookie:{maxAge: 1000*60*60*24*2}, //2 days in miliseconds
-    store: new MongoStore({mongooseConnection: db, ttl: 2*24*60*60})
+  secret: 'mySecretString',
+  saveUninitialized: false,
+  resave:false,
+  store: new MongoStore({mongooseConnection: db, ttl: 2 * 24 * 60 * 60})
+  //ttl: 2 days * 24 hours * 60 minutes * 60 seconds
 }))
-
-//save to session
-
-app.post('/cart', (req,res)=>{
+  // SAVE SESSION CART API
+  app.post('/cart', function(req, res){
     var cart = req.body;
     req.session.cart = cart;
-    req.session.save((err)=>{
-        if(err) throw err;
-        res.json(req.session.cart)
-
+    req.session.save(function(err){
+      if(err){
+        throw err;
+      }
+      res.json(req.session.cart);
     })
-})
-
-//get session cart api
-app.get('/cart', (req,res)=>{
-    if(typeof req.session.cart !== "undefined"){
-        res.json(req.session.cart);
+  });
+  // GET SESSION CART API
+  app.get('/cart', function(req, res){
+    if(typeof req.session.cart !== 'undefined'){
+      res.json(req.session.cart);
     }
-})
+  });
+//--->>> END SESSION SET UP <<<----
 
-//-----POST BOOKS <<<<----
-var Books = require('./models/books');
-app.post('/books', (req,res)=>{
+
+var Books = require('./models/books.js');
+
+//---->>> POST BOOKS <<<-----
+app.post('/books', function(req, res){
   var book = req.body;
 
-  Books.create(book, (err, books)=>{
+  Books.create(book, function(err, books){
     if(err){
       throw err;
     }
     res.json(books);
   })
-})
+});
 
-// ----->>>GET Books<<<----//
-app.get('/books', (req,res)=>{
-  Books.find((err, book)=>{
-    if(err){
-      return res.status(422).send(err);
-    }
-    res.json(book)
-  })
-})
-
-
-//--->>DELETE BOOKS <<<----//
-
-app.delete('/books/:_id', (req,res)=>{
-  const query = { _id: req.params._id};
-  Books.remove(query, (err,book)=>{
-    if(err){
-      throw err;
-    }
-    res.send("Successfully deleted");
-  })
-})
-
-
-//------>>>Update Books<<<-----//
-
-app.put('/books/:_id',(req,res)=>{
-  var book = req.body;
-
-  var query = req.params._id;
-  //if the field doesn't exist $set will set a new field
-
-  var update = {
-    '$set' : {
-      title: book.title,
-      description: book.description,
-      images: book.images,
-      price: book.price
-    }
-  };
-  //when true returns the updated document
-
-  var options = {new: true}
-
-  Books.findOneAndUpdate(query, update, options, (err,books)=>{
+//----->>>> GET BOOKS <<<---------
+app.get('/books', function(req, res){
+  Books.find(function(err, books){
     if(err){
       throw err;
     }
     res.json(books)
   })
+});
 
-})
+//---->>> DELETE BOOKS <<<------
+app.delete('/books/:_id', function(req, res){
+  var query = {_id: req.params._id};
 
-//End APIs
-
-
-//--->>Get BOOKS Images<<<----//
-app.get('/images', function(req,res){
-    const imgFolder = __dirname + '/public/images/';
-    //required files in the directory
-    const fs = require('fs')
-    fs.readdir(imgFolder, function(err, files){
-        if(err){
-            return console.log(err);
-        }
-        const filesArr = [];
-        files.forEach(function(file){
-            filesArr.push({name: file})
-        });
-        res.json(filesArr)
-
-    }
-    
-    )
-
-})
-
-const PORT = process.env.PORT || 3001
-
-app.listen(PORT, function(err){
+  Books.remove(query, function(err, books){
     if(err){
-        return console.log(err)
+      console.log("# API DELETE BOOKS: ", err);
     }
-    console.log(`App is running on port ${PORT}`);
+    res.json(books);
+  })
+});
+
+//---->>> UPDATE BOOKS <<<------
+app.put('/books/:_id', function(req, res){
+  var book = req.body;
+  var query = req.params._id;
+  // if the field doesn't exist $set will set a new field
+  var update = {
+    '$set':{
+      title:book.title,
+      description:book.description,
+      image:book.image,
+      price:book.price
+    }
+  };
+    // When true returns the updated document
+    var options = {new: true};
+
+    Books.findOneAndUpdate(query, update, options, function(err, books){
+      if(err){
+        throw err;
+      }
+      res.json(books);
+    })
+
 })
+
+  // --->>> GET BOOKS IMAGES API <<<------
+  app.get('/images', function(req, res){
+
+    const imgFolder = __dirname + '/public/images/';
+    // REQUIRE FILE SYSTEM
+    const fs = require('fs');
+    //READ ALL FILES IN THE DIRECTORY
+    fs.readdir(imgFolder, function(err, files){
+      if(err){
+        return console.error(err);
+      }
+      //CREATE AN EMPTY ARRAY
+      const filesArr = [];
+      // ITERATE ALL IMAGES IN THE DIRECTORY AND ADD TO THE ARRAY
+      files.forEach(function(file){
+        filesArr.push({name: file});
+      });
+      // SEND THE JSON RESPONSE WITH THE ARARY
+      res.json(filesArr);
+    })
+  })
+
+
+// END APIs
+
+app.listen(3001, function(err){
+  if(err){
+    return console.log(err);
+  }
+  console.log('API Sever is listening on http://localhost:3001');
+});

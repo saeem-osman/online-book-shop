@@ -1,44 +1,30 @@
-var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+
 var logger = require('morgan');
-var app = express();
-app.use(logger('dev'));
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
-
-
-
-
-
-
-
 //PROXY
-const httpProxy = require('http-proxy');
+var httpProxy = require('http-proxy');
+const cors = require('cors')
+var app = express();
+app.use(cors({credentials: true, origin: true }))
+app.use(logger('dev'));
+
+//PROXY TO API
 const apiProxy = httpProxy.createProxyServer({
   target:"http://localhost:3001"
 });
 app.use('/api', function(req, res){
   apiProxy.web(req, res);
 })
+// END PROXY
 
-//end proxy
- 
-
-
-
-
-
-app.use(express.json());
-
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('*', (req,res)=>{
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+app.get('*', function(req, res){
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,7 +33,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// // error handler
+// error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;

@@ -15,6 +15,8 @@ import Cart from './components/pages/Cart'
 import Main from './Main'
 import Menu from './components/Menu'
 import Footer from './components/Footer'
+import axios from 'axios'
+window.axios = axios
 const middleware = applyMiddleware(thunk,createLogger());
 
 
