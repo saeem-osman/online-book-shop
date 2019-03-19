@@ -5,7 +5,15 @@ export function booksReducer(state = {book:[]}, action){
         return {...state, book: [...action.payload]}
 
         case "POST_BOOK":
-        return {book: [...state.book, ...action.payload]}
+        return {...state, book: [...state.book, ...action.payload], msg: 'Saved! Click to continue', 
+        style: 'success', validation: 'success'
+            }
+
+        case "POST_BOOK_REJECTED":
+        return {...state, msg: 'Please, try again', style: 'danger', validation: 'error' }
+
+        case "SUBMIT_FORM":
+        return {...state, msg: '', style: 'primary', validation: 'null' }
       
         case "DELETE_BOOK":
         const allbook = [...state.book]

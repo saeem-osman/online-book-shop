@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { InputGroup, DropdownButton, Dropdown, Image, Col, Row ,Container, Form, Card, FormControl, FormGroup, FormLabel, Button } from 'react-bootstrap'
 import {bindActionCreators} from 'redux'
 import { connect } from 'react-redux'
-import { postBook, deleteBook,getBook } from '../../actions'
+import { postBook, deleteBook, getBook, resetForm } from '../../actions'
 import {findDOMNode} from 'react-dom'
 import axios from 'axios'
 
@@ -39,15 +39,26 @@ export class BookForm extends Component {
       const book=[{
         title: findDOMNode(this.refs.title).value,
         description: findDOMNode(this.refs.description).value,
+        images: findDOMNode(this.refs.images).value,
         price: findDOMNode(this.refs.price).value,
       }]
-      this.props.postBooks(book);
+      this.props.postBook(book);
+      
     }
 
     handleSelect(img){
       this.setState({
         img: '/images/'+ img
       })
+    }
+
+    resetFormData() {
+       this.props.resetForm();
+       findDOMNode(this.refs.title).value = '',
+       findDOMNode(this.refs.description).value = '',
+       findDOMNode(this.refs.images).value = '',
+       findDOMNode(this.refs.price).value = '',
+       this.setState({img: ''})
     }
 
     onDelete(){
@@ -66,9 +77,9 @@ export class BookForm extends Component {
     const imgList = this.state.images.map(function(imgArr, i){
       return(
         <Dropdown.Item key={i} eventKey={imgArr.name}
-          >{imgArr.name}</Dropdown.Item>
+       onClick={this.handleSelect.bind(this, imgArr.name)}   >{imgArr.name}</Dropdown.Item>
       )
-    })
+    },this)
     
 
     return (
@@ -77,40 +88,47 @@ export class BookForm extends Component {
           <Col>
             <Card>
               <InputGroup>
-                <FormControl type="text" ref="image" value=""/>
+                <FormControl type="text" ref="images" value={this.state.img}/>
                 <DropdownButton id="dropdown-basic-button" title="Select an image" variant="primary">
                   {imgList}
                 </DropdownButton>;
               </InputGroup>
-              <Image src="" rounded/>
+              <Image src={this.state.img} rounded/>
             </Card>
           </Col>
           <Col>
             <Card>
-                <FormGroup controlId="title">
+                <FormGroup controlId="title" bsPrefix={this.props.validation} >
                   <FormLabel>Title</FormLabel>
                   <FormControl
                       type="text"
                       placeholder="Enter Title"
                       ref="title" />
+                      <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </FormGroup>
 
-                <FormGroup controlId="description">
+                <FormGroup controlId="description" bsPrefix={this.props.validation}>
                   <FormLabel>Description</FormLabel>
                   <FormControl
                       type="text"
                       placeholder="Enter Description"
                       ref="description" />
+                      <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </FormGroup>
 
-                <FormGroup controlId="price">
+                <FormGroup controlId="price" bsPrefix ={this.props.validation}>
                   <FormLabel>Price</FormLabel>
                   <FormControl
                       type="text"
                       placeholder="Enter price"
                       ref="price" />
+                      <Form.Control.Feedback />
                 </FormGroup>
-                <Button variant="primary" onClick={this.handleSubmit.bind(this)}>Save Book</Button>
+                <Button onClick={(!this.props.msg)?(this.handleSubmit.bind(this)):(this.resetFormData.bind(this))}
+                variant={!(this.props.style)? "primary": (this.props.style)}
+                >
+                {!(this.props.msg)?("Save Book"):(this.props.msg)}
+                </Button>
             </Card>
             <Card>
             <Form>
@@ -134,13 +152,16 @@ export class BookForm extends Component {
 
 function mapStateToProps(state){
   return {
-    books: state.books.book
+    books: state.books.book,
+    msg: state.books.msg,
+    style : state.books.style,
+    validation: state.books.validation
   }
 }
 
 function mapDispatchToprops(dispatch){
     return(
-        bindActionCreators({postBook, deleteBook, getBook},dispatch)
+        bindActionCreators({postBook, deleteBook, getBook, resetForm},dispatch)
     )
 }
 export default connect(mapStateToProps,mapDispatchToprops)(BookForm)

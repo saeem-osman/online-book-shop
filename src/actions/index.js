@@ -41,6 +41,12 @@ export function updateBook(book){
     }
 }
 
+export function resetForm(){
+    return{
+        type: "SUBMIT_FORM",
+    }
+}
+
 export function deleteBook (_id){
     return function(dispatch){
         axios.delete('/api/books/' + _id)

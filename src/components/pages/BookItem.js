@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container,Col,Row,Button} from 'react-bootstrap'
+import {Card, Image,Col,Row,Button} from 'react-bootstrap'
 import {addToCart, updateCart} from '../../actions'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -11,6 +11,7 @@ class BookItem extends React.Component{
                 _id: this.props._id,
                 title: this.props.title,
                 description: this.props.description,
+                images: this.props.images,
                 price: this.props.price,
                 quantity: 1
             }
@@ -30,18 +31,41 @@ class BookItem extends React.Component{
         }
         
     }
+    constructor(){
+        super();
+        this.state = {
+            isClicked: false
+        }
+    }
+
+    onReadMore(){
+        this.setState({isClicked: true})
+    }
+
     render(){
         return(
-            <Container>
-                <Row>
-                    <Col xs={12}>
-                        <h6>{this.props.title}</h6>
-                        <p>{this.props.description}</p>
+            <Card>
+                <Row style={{justifyContent: 'space-between'}}>
+                    <Col xs={12} sm={4}>
+                    <Image src={this.props.images} bsPrefix="imageContent" />
+                    </Col>
+                    <Col xs={6} sm={8}>
+                        <h4><b>{this.props.title}</b></h4>
+                        <p>
+                        {/* {(this.props.description.length > 0 && this.state.isClicked === false)?
+                        this.props.description.subString(0,50):this.props.description} */}
+                        {this.props.description}
+
+                        <button className="link" onClick={this.onReadMore.bind(this)}>
+                        {(this.props.description.length> 50 && this.props.description !== null && this.state.isClicked === false)?
+                        ('...read more'):('')}
+                        </button>
+                        </p>
                         <h6>$ {this.props.price}</h6>
                         <Button variant='primary' onClick={this.handleCart.bind(this)}>Buy Now</Button>
                     </Col>
                 </Row>
-            </Container>
+            </Card>
         )
     }1
 }

@@ -3,9 +3,8 @@ import { connect } from 'react-redux'
 import {bindActionCreators} from 'redux'
 
 import {getBook} from '../../actions'
-import {Container, Row, Button, Col, Navbar} from 'react-bootstrap'
+import { Carousel, Row, Button, Col, Navbar, Card, Container} from 'react-bootstrap'
 import BookItem from './BookItem'
-import BookForm from './BookForm'
 import Cart from './Cart'
 export class BookList extends Component {
     componentDidMount(){
@@ -21,6 +20,7 @@ export class BookList extends Component {
                     _id={book._id}
                     title={book.title}
                     description = {book.description}
+                    images = {book.images}
                     price = {book.price}
                 />
                 </div>
@@ -29,17 +29,54 @@ export class BookList extends Component {
     })
     return (
       <Container>
+        <Row>
+        <Carousel>
+          <Carousel.Item>
+            <img
+              className="d-block w-100" width={900} height={300}
+              src="/images/slides/picture1.jpg"
+              alt="First slide"
+            />
+            <Carousel.Caption>
+              <h3>First slide label</h3>
+              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              height = {300}
+              width={900}
+              src="/images/slides/picture2.jpg"
+              alt="Third slide"
+            />
+
+            <Carousel.Caption>
+              <h3>Second slide label</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              height = {300}
+              width={900}
+              src="/images/slides/picture1.jpg"
+              alt="Third slide"
+            />
+
+            <Carousel.Caption>
+              <h3>Third slide label</h3>
+              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        </Carousel>
+        </Row>
           <Row>
               <Cart />
           </Row>
-          
-          <Row>
-              <Col xs={12} sm={6}>
-                <BookForm />
-              </Col>
-              <Col xs={12} sm={6} md={4}>
+          <Row style={{display: 'flex' , marginTop: "15px"}}>
             {bookList}
-            </Col>
           </Row>
       </Container>
     )

@@ -17,3 +17,19 @@ body {
 .badge {
     background-color: #e4aa48;
 }
+
+.imageContent {
+    width: 75px;
+    height: 150x;;
+}
+
+button.link {
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 3px;
+    outline: none;
+    outline-offset: 0;
+    color: white;
+
+}

@@ -22,7 +22,7 @@ export class Menu extends Component {
             </Nav>
             <Nav pullRight>
             <NavItem eventKey={1}><Link to="/admin">Admin</Link></NavItem>
-            <NavItem eventKey={2}><Link to="/cart">Cart</Link>
+            <NavItem eventKey={2}><Link to="/cart"></Link>
                 Your Cart {(this.props.totalCartItems>0)?(<Badge className="badge">{this.props.totalCartItems}</Badge>): ''}
             </NavItem>
             </Nav>
