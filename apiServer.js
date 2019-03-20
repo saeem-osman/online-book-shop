@@ -14,7 +14,12 @@ app.use(cookieParser());
 
 // APIs
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/bookshop', {useNewUrlParser: true});
+
+//mongodb atlas
+mongoose.connect('mongodb+srv://test:saeem12345@cluster0-bu1jl.mongodb.net/test?retryWrites=true', {useNewUrlParser: true})
+
+//localhost
+//mongoose.connect('mongodb://localhost:27017/bookshop', {useNewUrlParser: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, '# MongoDB - connection error: '));
