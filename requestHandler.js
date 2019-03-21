@@ -1,6 +1,6 @@
 "use strict"
 
-import axios from 'axios'
+const axios = require('axios')
 
 function handleRender(req,res){
     axios.get('http://localhost:3001/books')
