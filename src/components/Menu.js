@@ -13,7 +13,7 @@ export class Menu extends Component {
   render() {
     return (
     <Navbar inverse fixedTop expand="lg" bg="dark" variant="dark">
-        <Navbar.Brand><Link to="/">Home Page</Link></Navbar.Brand>
+        <Navbar.Brand><Link to="/">Book Shop</Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">

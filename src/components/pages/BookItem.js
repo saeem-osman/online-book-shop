@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, Image,Col,Row,Button} from 'react-bootstrap'
+import {Card, Image,Col,Row,Button, Media} from 'react-bootstrap'
 import {addToCart, updateCart} from '../../actions'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -45,11 +45,22 @@ class BookItem extends React.Component{
     render(){
         return(
             <Card>
-                <Row style={{justifyContent: 'space-between'}}>
-                    <Col xs={12} sm={4}>
-                    <Image src={this.props.images} bsPrefix="imageContent" />
+                <Row>
+                    <Col>
+                    <Col>
+                    {/* <Image src={this.props.images} bsPrefix="imageContent" /> */}
+                    <Media>
+                        <img
+                            width={300}
+                            height={450}
+                            src={this.props.images}
+                            alt="Book picture"
+                            style={{backgroundSize: '100%'}}
+                        />
+                    </Media>
                     </Col>
-                    <Col xs={6} sm={8}>
+                    <div className="bookItem">
+                    <Col>
                         <h4><b>{this.props.title}</b></h4>
                         <p>
                         {/* {(this.props.description.length > 0 && this.state.isClicked === false)?
@@ -63,6 +74,9 @@ class BookItem extends React.Component{
                         </p>
                         <h6>$ {this.props.price}</h6>
                         <Button variant='primary' onClick={this.handleCart.bind(this)}>Buy Now</Button>
+                    </Col>
+                    
+                    </div>
                     </Col>
                 </Row>
             </Card>

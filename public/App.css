@@ -33,3 +33,25 @@ button.link {
     color: white;
 
 }
+
+.mr-auto{
+    padding: 5px;
+}
+
+
+.bookItem {
+
+position: relative;
+margin-left: auto;
+margin-bottom: auto;
+display: block;
+padding-left: 10px;
+justify-content: space-between;
+
+
+}
+
+.footer {
+    margin-top: 50px;
+    padding-top: 50px;
+}

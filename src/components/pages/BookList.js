@@ -28,8 +28,13 @@ export class BookList extends Component {
         )
     })
     return (
+      <div>
       <Container>
         <Row>
+              <Cart />
+          </Row>
+        <Row>
+          <Col xs={12} sm md>
         <Carousel>
           <Carousel.Item>
             <img
@@ -38,8 +43,8 @@ export class BookList extends Component {
               alt="First slide"
             />
             <Carousel.Caption>
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+              <h3>Your trusted Bookshop</h3>
+              <p>Buy premium books at a cheaper price.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
@@ -52,8 +57,8 @@ export class BookList extends Component {
             />
 
             <Carousel.Caption>
-              <h3>Second slide label</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <h3>Enjoy 50% sale on selected books.</h3>
+              <p>Go with feedom</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
@@ -71,14 +76,16 @@ export class BookList extends Component {
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
+        </Col>
         </Row>
+        </Container>
+        <Container>
+          
           <Row>
-              <Cart />
-          </Row>
-          <Row style={{display: 'flex' , marginTop: "15px"}}>
             {bookList}
           </Row>
       </Container>
+      </div>
     )
   }
 }
