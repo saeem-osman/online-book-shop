@@ -17,3 +17,7 @@
 <p>Cart history will be stored in the mongo database. </p>
 <h3>Screenshots</h3>
 <img src="/screenshot/FireShot1.png">
+<hr />
+<img src="/screenshot/file2.png">
+<hr />
+<img src="/screenshot/file3.png">
